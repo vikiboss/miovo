@@ -67,4 +67,25 @@ describe('sample', () => {
 
     expect(array).toContain(result)
   })
+
+  it('should be reproducible with seed', () => {
+    const array = [1, 2, 3, 4, 5]
+    const result1 = sample(array, 12345)
+    const result2 = sample(array, 12345)
+
+    expect(result1).toBe(result2)
+  })
+
+  it('should return different values with different seeds', () => {
+    const array = [1, 2, 3, 4, 5]
+    const result1 = sample(array, 12345)
+    const result2 = sample(array, 67890)
+
+    expect(result1).not.toBe(result2)
+  })
+
+  it('should work with seed for empty array', () => {
+    const result = sample([], 12345)
+    expect(result).toBeUndefined()
+  })
 })

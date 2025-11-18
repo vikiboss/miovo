@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Miovo** is a type-safe, dependency-free, modern utility library for JavaScript and TypeScript. It provides 20+ carefully crafted utility functions and 21 TypeScript utility types.
+**Miovo** is a type-safe, dependency-free, modern utility library for JavaScript and TypeScript. It provides 30+ carefully crafted utility functions and 16 TypeScript utility types.
 
 ### Core Philosophy
 
@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 3. **Universal Runtime** - Works in Node.js, Browsers, Deno, Bun, and Cloudflare Workers
 4. **Modern & Minimal** - Uses latest ECMAScript features (ES2025+)
 5. **Tree-shakable** - ESM-first with optimal tree-shaking support
-6. **Well-tested** - 281+ tests with 100% coverage goal
+6. **Well-tested** - High test coverage with 400+ tests
 
 ## Project Structure
 
@@ -260,9 +260,58 @@ pnpm test
 pnpm typecheck
 ```
 
-## TypeScript Utility Types
+## Function Utilities (30+ total)
 
-### Current Types (21 total)
+### Timing & Async
+- `debounce(fn, delay, options?)` - Debounce function execution
+- `throttle(fn, delay, options?)` - Throttle function execution
+- `wait(ms)` - Promise-based delay
+- `sleep(ms)` - Alias for `wait`
+- `timestamp(inSeconds?)` - Get current timestamp
+
+### Formatting
+- `formatMs(ms, options?)` - Format milliseconds to human-readable string
+- `formatByte(bytes, options?)` - Format bytes to human-readable size
+- `formatTime(date, format?)` - Format date with template
+
+### Encoding & Hashing
+- `base64.encode(str)` / `base64.decode(str)` - Base64 encoding/decoding
+- `hash(str)` - Fast non-cryptographic hash (MurmurHash3)
+- `md5(str)` - MD5 hash (for checksums only)
+- `uuid()` - RFC4122 v4 UUID generator
+
+### Random
+- `random(seed)` - Create seeded RNG
+- `Random` class - Seeded pseudo-random number generator
+- `randomId(length?, seed?)` - Random alphanumeric ID
+- `randomInt(min, max, seed?)` - Random integer
+- `sample(array, seed?)` - Random array element
+- `shuffle(array, seed?)` - Fisher-Yates shuffle
+
+### Array
+- `chunk(array, size)` - Split array into chunks
+- `unique(array, identity?)` - Remove duplicates
+- `toArray(value)` - Convert value to array
+- `range(start, end, step?)` - Generate number range
+- `sum(numbers)` - Sum array of numbers
+
+### Number
+- `clamp(value, min, max)` - Clamp number within range
+- `inRange(value, min, max)` - Check if number in range
+
+### String
+- `dedent(str)` / `` dedent`template` `` - Remove indentation
+- `truncate(str, length, suffix?)` - Truncate string
+- `qs.parse(str)` / `qs.stringify(obj)` - Query string parsing
+
+### Pattern Matching
+- `match(value)` - Rust-style pattern matching
+
+### Control Flow
+- `retry(fn, options?)` - Retry async operations
+- `noop()` - No-operation function
+
+## TypeScript Utility Types (16 total)
 
 Organized by category:
 

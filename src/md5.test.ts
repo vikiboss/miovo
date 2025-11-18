@@ -40,4 +40,78 @@ describe('md5', () => {
     const hash = md5(long)
     expect(hash).toHaveLength(32)
   })
+
+  it('should handle Unicode characters', () => {
+    const hash1 = md5('Hello 世界')
+    const hash2 = md5('🚀 emoji')
+
+    expect(hash1).toHaveLength(32)
+    expect(hash2).toHaveLength(32)
+    expect(hash1).toMatch(/^[a-f0-9]{32}$/)
+    expect(hash2).toMatch(/^[a-f0-9]{32}$/)
+  })
+
+  it('should handle special characters', () => {
+    const hash = md5('!@#$%^&*()')
+    expect(hash).toHaveLength(32)
+    expect(hash).toMatch(/^[a-f0-9]{32}$/)
+  })
+
+  it('should handle newlines and whitespace', () => {
+    const hash1 = md5('line1\nline2')
+    const hash2 = md5('  spaces  ')
+
+    expect(hash1).toHaveLength(32)
+    expect(hash2).toHaveLength(32)
+    expect(hash1).not.toBe(hash2)
+  })
+
+  it('should handle very long strings correctly', () => {
+    const veryLong = 'x'.repeat(100000)
+    const hash = md5(veryLong)
+
+    expect(hash).toHaveLength(32)
+    expect(hash).toMatch(/^[a-f0-9]{32}$/)
+  })
+
+  it('should handle strings with null bytes', () => {
+    const hash = md5('before\u0000after')
+    expect(hash).toHaveLength(32)
+    expect(hash).toMatch(/^[a-f0-9]{32}$/)
+  })
+
+  it('should produce consistent hashes across multiple calls', () => {
+    const input = 'consistency test 123'
+    const hashes = Array.from({ length: 10 }, () => md5(input))
+
+    expect(new Set(hashes).size).toBe(1)
+  })
+
+  it('should handle mixed alphanumeric strings', () => {
+    const hash1 = md5('abc123')
+    const hash2 = md5('ABC123')
+
+    expect(hash1).toHaveLength(32)
+    expect(hash2).toHaveLength(32)
+    expect(hash1).not.toBe(hash2)
+  })
+
+  it('should handle consecutive similar inputs differently', () => {
+    const hash1 = md5('test1')
+    const hash2 = md5('test2')
+    const hash3 = md5('test3')
+
+    expect(hash1).not.toBe(hash2)
+    expect(hash2).not.toBe(hash3)
+    expect(hash1).not.toBe(hash3)
+  })
+
+  it('should work with JSON strings', () => {
+    const obj = { name: 'John', age: 30, active: true }
+    const json = JSON.stringify(obj)
+    const hash = md5(json)
+
+    expect(hash).toHaveLength(32)
+    expect(hash).toMatch(/^[a-f0-9]{32}$/)
+  })
 })

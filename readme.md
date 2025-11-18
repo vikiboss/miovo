@@ -15,7 +15,7 @@
 - 🌲 **Tree-shakable** - Optimized for tree-shaking, only bundle what you use
 - ⚡️ **Performant** - Carefully optimized for performance
 - 📝 **Well Documented** - Comprehensive documentation and examples
-- ✅ **Fully Tested** - 100% test coverage with 281+ tests
+- ✅ **Fully Tested** - High test coverage with 400+ tests
 
 ## 📦 Installation
 
@@ -36,7 +36,7 @@ bun add miovo
 ## 🚀 Usage
 
 ```typescript
-import { debounce, formatMs, unique, match } from 'miovo'
+import { debounce, formatMs, unique, match, chunk, retry } from 'miovo'
 
 // Debounce function
 const handleSearch = debounce((query: string) => {
@@ -56,6 +56,16 @@ const users = unique(
   (user) => user.id,
 ) // [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }]
 
+// Split array into chunks
+chunk([1, 2, 3, 4, 5], 2) // [[1, 2], [3, 4], [5]]
+
+// Retry failed operations
+await retry(async () => {
+  const res = await fetch('/api/data')
+  if (!res.ok) throw new Error('Failed')
+  return res.json()
+}, { retries: 3, delay: 1000 })
+
 // Pattern matching
 const result = match(value)
   .case(1, 'one')
@@ -71,15 +81,17 @@ const result = match(value)
 
 ### Function Utilities
 
-| Category          | Functions                                                                                                                             |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **⏱️ Timing**     | [`debounce`](#debouncefn-delay-options) · [`throttle`](#throttlefn-delay-options) · [`wait`](#waitms) · [`timestamp`](#timestampunit) |
-| **🎨 Formatting** | [`formatMs`](#formatmsms-options) · [`formatByte`](#formatbytebytes-options) · [`formatTime`](#formattimedate-format)                 |
-| **🔐 Encoding**   | [`base64`](#base64encodestr--base64decodestr) · [`hash`](#hashstr-seed) · [`md5`](#md5str) · [`uuid`](#uuid)                          |
-| **🎲 Random**     | [`randomId`](#randomidlength) · [`randomInt`](#randomintmin-max) · [`sample`](#samplearray)                                           |
-| **📊 Array**      | [`unique`](#uniquearray-identity) · [`toArray`](#toarrayvalue)                                                                        |
-| **🎯 Pattern**    | [`match`](#matchvalue)                                                                                                                |
-| **🔗 String**     | [`dedent`](#dedentstr--dedenttemplate) · [`qs`](#qsparsestr--qsstringifyobj)                                                          |
+| Category          | Functions                                                                                                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **⏱️ Timing**     | [`debounce`](#debouncefn-delay-options) · [`throttle`](#throttlefn-delay-options) · [`wait`](#waitms) · [`sleep`](#sleepms) · [`timestamp`](#timestampinseconds)       |
+| **🎨 Formatting** | [`formatMs`](#formatmsms-options) · [`formatByte`](#formatbytebytes-options) · [`formatTime`](#formattimedate-format)                                                   |
+| **🔐 Encoding**   | [`base64`](#base64encodestr--base64decodestr) · [`hash`](#hashstr) · [`md5`](#md5str) · [`uuid`](#uuid)                                                                 |
+| **🎲 Random**     | [`random`](#randomseed) · [`Random`](#random-class) · [`randomId`](#randomidlength-seed) · [`randomInt`](#randomintmin-max-seed) · [`sample`](#samplearray-seed) · [`shuffle`](#shufflearray-seed) |
+| **📊 Array**      | [`chunk`](#chunkarray-size) · [`unique`](#uniquearray-identity) · [`toArray`](#toarrayvalue) · [`range`](#rangestart-end-step) · [`sum`](#sumnumbers)                  |
+| **🔢 Number**     | [`clamp`](#clampvalue-min-max) · [`inRange`](#inrangevalue-min-max)                                                                                                     |
+| **🎯 Pattern**    | [`match`](#matchvalue)                                                                                                                                                  |
+| **🔗 String**     | [`dedent`](#dedentstr--dedenttemplate) · [`truncate`](#truncatestr-length-suffix) · [`qs`](#qsparsestr--qsstringifyobj)                                                 |
+| **🔄 Control**    | [`retry`](#retryfn-options) · [`noop`](#noop)                                                                                                                            |
 
 ### TypeScript Utilities
 
@@ -287,48 +299,132 @@ uuid() // "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 
 ### 🎲 Random Utilities
 
-#### `randomId(length?)`
+#### `random(seed)`
 
-Generates a random alphanumeric ID.
+Creates a seeded pseudo-random number generator with reproducible sequences.
 
 ```typescript
-import { randomId } from 'miovo'
+import { random } from 'miovo'
 
-randomId() // "a3k9m2" (default length: 6)
-randomId(12) // "k8n2p5q9m3x7"
+const rng = random(12345)
+rng.random() // 0.6011037053447217
+rng.random() // 0.2541264604032785
+
+// Same seed produces same sequence
+const rng2 = random(12345)
+rng2.random() // 0.6011037053447217 (same as first)
 ```
 
 ---
 
-#### `randomInt(min, max)`
+#### `Random` Class
 
-Generates a random integer between min (inclusive) and max (inclusive).
+A seeded pseudo-random number generator class with utility methods.
+
+```typescript
+import { Random } from 'miovo'
+
+const rng = new Random(42)
+
+// Generate random numbers
+rng.random() // [0, 1) float
+rng.int(1, 10) // Random integer 1-10 (inclusive)
+rng.float(0, 100) // Random float [0, 100)
+
+// Array operations
+rng.pick(['a', 'b', 'c']) // Random element
+rng.shuffle([1, 2, 3, 4]) // Shuffled array
+
+// Boolean with probability
+rng.bool() // 50% true/false
+rng.bool(0.7) // 70% chance of true
+
+// Reset to initial state
+rng.reset(42)
+```
+
+---
+
+#### `randomId(length?, seed?)`
+
+Generates a random alphanumeric ID with optional seed for reproducibility.
+
+```typescript
+import { randomId } from 'miovo'
+
+randomId() // "gx4k2n7p9m5q8j3w" (default length: 16)
+randomId(8) // "a3k9m2p5"
+randomId(12, 42) // Reproducible ID with seed
+```
+
+---
+
+#### `randomInt(min, max, seed?)`
+
+Generates a random integer with optional seed for reproducibility.
 
 ```typescript
 import { randomInt } from 'miovo'
 
 randomInt(1, 10) // Random number from 1 to 10
 randomInt(0, 100) // Random number from 0 to 100
+randomInt(1, 6, 42) // Reproducible dice roll with seed
 ```
 
 ---
 
-#### `sample(array)`
+#### `sample(array, seed?)`
 
-Returns a random element from an array.
+Returns a random element from an array with optional seed.
 
 ```typescript
 import { sample } from 'miovo'
 
 const fruits = ['apple', 'banana', 'cherry']
 sample(fruits) // Randomly returns one of the fruits
+sample(fruits, 42) // Reproducible random selection
 
 sample([]) // undefined
 ```
 
 ---
 
+#### `shuffle(array, seed?)`
+
+Shuffles an array using Fisher-Yates algorithm with optional seed.
+
+```typescript
+import { shuffle } from 'miovo'
+
+shuffle([1, 2, 3, 4, 5]) // [3, 1, 5, 2, 4]
+shuffle([1, 2, 3, 4, 5], 42) // Reproducible shuffle
+
+const original = [1, 2, 3]
+const shuffled = shuffle(original)
+// original is unchanged
+```
+
+---
+
 ### 📊 Array Utilities
+
+#### `chunk(array, size)`
+
+Splits an array into chunks of specified size.
+
+```typescript
+import { chunk } from 'miovo'
+
+chunk([1, 2, 3, 4, 5], 2) // [[1, 2], [3, 4], [5]]
+chunk([1, 2, 3, 4], 2) // [[1, 2], [3, 4]]
+chunk(['a', 'b', 'c'], 1) // [['a'], ['b'], ['c']]
+
+// Edge cases
+chunk([], 2) // []
+chunk([1, 2, 3], 5) // [[1, 2, 3]]
+```
+
+---
 
 #### `unique(array, identity?)`
 
@@ -366,6 +462,75 @@ toArray(5) // [5]
 toArray([1, 2, 3]) // [1, 2, 3] (unchanged)
 toArray(null) // []
 toArray(undefined) // []
+```
+
+---
+
+#### `range(start, end, step?)`
+
+Creates an array of numbers progressing from start to end.
+
+```typescript
+import { range } from 'miovo'
+
+range(0, 5) // [0, 1, 2, 3, 4, 5]
+range(1, 10) // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+range(0, 10, 2) // [0, 2, 4, 6, 8, 10]
+range(5, 0, -1) // [5, 4, 3, 2, 1, 0]
+
+// Negative ranges
+range(-5, -1) // [-5, -4, -3, -2, -1]
+```
+
+---
+
+#### `sum(numbers)`
+
+Calculates the sum of an array of numbers.
+
+```typescript
+import { sum } from 'miovo'
+
+sum([1, 2, 3, 4, 5]) // 15
+sum([10, -5, 3]) // 8
+sum([]) // 0
+sum([42]) // 42
+```
+
+---
+
+### 🔢 Number Utilities
+
+#### `clamp(value, min, max)`
+
+Clamps a number within the inclusive range defined by min and max.
+
+```typescript
+import { clamp } from 'miovo'
+
+clamp(15, 0, 10) // 10
+clamp(-5, 0, 10) // 0
+clamp(5, 0, 10) // 5
+
+// With negative numbers
+clamp(-15, -10, -5) // -10
+clamp(-3, -10, -5) // -5
+```
+
+---
+
+#### `inRange(value, min, max)`
+
+Checks if a number is within the specified range (inclusive).
+
+```typescript
+import { inRange } from 'miovo'
+
+inRange(5, 0, 10) // true
+inRange(0, 0, 10) // true
+inRange(10, 0, 10) // true
+inRange(11, 0, 10) // false
+inRange(-1, 0, 10) // false
 ```
 
 ---
@@ -426,6 +591,24 @@ const html = dedent`
 
 ---
 
+#### `truncate(str, length, suffix?)`
+
+Truncates a string to specified length with optional suffix.
+
+```typescript
+import { truncate } from 'miovo'
+
+truncate('Hello, World!', 8) // "Hello..."
+truncate('Hello, World!', 8, '…') // "Hello, …"
+truncate('Short', 10) // "Short"
+
+// Custom suffix
+truncate('Lorem ipsum dolor sit amet', 15, '...[more]')
+// "Lorem ip...[more]"
+```
+
+---
+
 #### `qs.parse(str)` / `qs.stringify(obj)`
 
 Parse and stringify URL query strings.
@@ -444,18 +627,87 @@ qs.stringify({ name: 'John', age: 30 }) // "name=John&age=30"
 
 ---
 
+### 🔄 Control Flow Utilities
+
+#### `retry(fn, options?)`
+
+Retries an async function with configurable attempts, delay, and backoff.
+
+```typescript
+import { retry } from 'miovo'
+
+// Basic retry
+const data = await retry(
+  async () => await fetch('/api/data').then((r) => r.json()),
+  { attempts: 3, delay: 1000 },
+)
+
+// With exponential backoff
+const result = await retry(async () => await fetchData(), {
+  attempts: 5,
+  delay: 1000,
+  backoff: 2, // 1s, 2s, 4s, 8s, 16s
+  maxDelay: 10000, // Cap at 10s
+})
+
+// Conditional retry
+const result = await retry(async () => await fetchData(), {
+  attempts: 3,
+  shouldRetry: (error) => error.status === 503, // Only retry on 503
+})
+```
+
+**Options:**
+
+- `attempts: number` - Maximum retry attempts (default: 3)
+- `delay: number` - Delay between retries in ms (default: 1000)
+- `backoff: number` - Exponential backoff multiplier (default: 1)
+- `maxDelay: number` - Maximum delay in ms (default: Infinity)
+- `shouldRetry: (error, attempt) => boolean` - Retry predicate
+
+---
+
+#### `noop()`
+
+A no-operation function that does nothing.
+
+```typescript
+import { noop } from 'miovo'
+
+const onClick = isEnabled ? handleClick : noop
+
+// Useful as default callback
+function fetchData(onSuccess = noop, onError = noop) {
+  // ...
+}
+```
+
+---
+
 ### ⏱️ Time Utilities
 
-#### `timestamp(unit?)`
+#### `timestamp(inSeconds?)`
 
-Returns current timestamp in specified unit.
+Returns current timestamp in milliseconds or seconds.
 
 ```typescript
 import { timestamp } from 'miovo'
 
-timestamp() // Current time in milliseconds (default)
-timestamp('s') // Current time in seconds
-timestamp('ms') // Current time in milliseconds
+timestamp() // Current time in milliseconds (default: false)
+timestamp(false) // Current time in milliseconds
+timestamp(true) // Current time in seconds
+```
+
+---
+
+#### `sleep(ms)`
+
+Alias for `wait(ms)` - Returns a promise that resolves after the specified milliseconds.
+
+```typescript
+import { sleep } from 'miovo'
+
+await sleep(1000) // Wait for 1 second
 ```
 
 ---

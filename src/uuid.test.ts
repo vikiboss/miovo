@@ -105,4 +105,33 @@ describe('uuid', () => {
       expect(result).toMatch(pattern)
     }
   })
+
+  it('should handle burst generation without collisions', () => {
+    const ids: string[] = []
+
+    // Generate many IDs in quick succession
+    for (let i = 0; i < 500; i++) {
+      ids.push(uuid())
+    }
+
+    const uniqueIds = new Set(ids)
+    expect(uniqueIds.size).toBe(500)
+  })
+
+  it('should have proper bit distribution in version field', () => {
+    // Test multiple UUIDs to ensure version field is always '4'
+    for (let i = 0; i < 20; i++) {
+      const id = uuid()
+      expect(id[14]).toBe('4')
+    }
+  })
+
+  it('should have proper bit distribution in variant field', () => {
+    // Test multiple UUIDs to ensure variant field follows RFC4122
+    for (let i = 0; i < 20; i++) {
+      const id = uuid()
+      const variantChar = id[19].toLowerCase()
+      expect(['8', '9', 'a', 'b']).toContain(variantChar)
+    }
+  })
 })

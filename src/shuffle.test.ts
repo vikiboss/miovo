@@ -68,4 +68,25 @@ describe('shuffle', () => {
     const shuffled = shuffle(readonly)
     expect(shuffled.sort()).toEqual([1, 2, 3, 4])
   })
+
+  it('should be reproducible with seed', () => {
+    const arr = [1, 2, 3, 4, 5]
+    const result1 = shuffle(arr, 12345)
+    const result2 = shuffle(arr, 12345)
+
+    expect(result1).toEqual(result2)
+  })
+
+  it('should produce different orders with different seeds', () => {
+    const arr = [1, 2, 3, 4, 5]
+    const result1 = shuffle(arr, 12345)
+    const result2 = shuffle(arr, 67890)
+
+    expect(result1).not.toEqual(result2)
+  })
+
+  it('should work with seed for empty array', () => {
+    const result = shuffle([], 12345)
+    expect(result).toEqual([])
+  })
 })

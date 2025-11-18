@@ -135,4 +135,23 @@ describe('randomInt', () => {
       expect(results.has(i)).toBe(true)
     }
   })
+
+  it('should be reproducible with seed', () => {
+    const result1 = randomInt(1, 100, 12345)
+    const result2 = randomInt(1, 100, 12345)
+
+    expect(result1).toBe(result2)
+  })
+
+  it('should return different values with different seeds', () => {
+    const result1 = randomInt(1, 100, 12345)
+    const result2 = randomInt(1, 100, 67890)
+
+    expect(result1).not.toBe(result2)
+  })
+
+  it('should work with seed for single value range', () => {
+    const result = randomInt(42, 42, 12345)
+    expect(result).toBe(42)
+  })
 })
