@@ -59,10 +59,12 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "release": "bumpp",
     "prepublishOnly": "pnpm build && pnpm test run && pnpm typecheck"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "4.0.10",
+    "bumpp": "^10.3.1",
     "prettier": "^3.6.2",
     "tsdown": "^0.16.5",
     "typescript": "^5.9.3",
