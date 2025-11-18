@@ -1,0 +1,70 @@
+{
+  "name": "miovo",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.22.0",
+  "description": "Type-safe, dependency-free, modern utility library for JavaScript and TypeScript",
+  "author": "Viki <hi@viki.moe> (https://github.com/vikiboss)",
+  "license": "MIT",
+  "homepage": "https://github.com/vikiboss/miovo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vikiboss/miovo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vikiboss/miovo/issues"
+  },
+  "prettier": {
+    "semi": false,
+    "printWidth": 120,
+    "trailingComma": "all",
+    "singleQuote": true,
+    "arrowParens": "always"
+  },
+  "keywords": [
+    "typescript",
+    "utilities",
+    "utils",
+    "helpers",
+    "type-safe",
+    "dependency-free",
+    "modern",
+    "esm",
+    "debounce",
+    "throttle",
+    "format"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "readme.md",
+    "license"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "pnpm build && pnpm test run && pnpm typecheck"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "tsdown": "^0.16.5",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.10"
+  }
+}

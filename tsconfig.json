@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    // ===================================
+    // Language and Environment
+    // ===================================
+
+    // Use latest ECMAScript features (ES2025+)
+    "target": "ESNext",
+
+    // Use latest standard library typings
+    "lib": ["ESNext"],
+
+    // ===================================
+    // Module Resolution
+    // ===================================
+
+    // Modern bundler-aware module resolution (Vite, Rollup, tsdown, etc.)
+    "moduleResolution": "Bundler",
+
+    // Specify module code generation
+    "module": "ESNext",
+
+    // Allow importing .ts/.tsx files without extension
+    "allowImportingTsExtensions": true,
+
+    // Resolve JSON modules
+    "resolveJsonModule": true,
+
+    // ===================================
+    // Emit Options
+    // ===================================
+
+    // Don't emit files (handled by tsdown)
+    "noEmit": true,
+
+    // Only erase type-only imports/exports
+    "verbatimModuleSyntax": true,
+
+    // ===================================
+    // Type Checking - Strict Mode
+    // ===================================
+
+    // Enable all strict type-checking options
+    "strict": true,
+
+    // Individual strict flags (implied by strict: true, but explicit for clarity)
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+
+    // Ensure built-in iterator return types are correct
+    "strictBuiltinIteratorReturn": true,
+
+    // ===================================
+    // Type Checking - Additional Checks
+    // ===================================
+
+    // Report errors for unused locals
+    "noUnusedLocals": true,
+
+    // Report errors for unused parameters
+    "noUnusedParameters": true,
+
+    // Report errors for fallthrough cases in switch statements
+    "noFallthroughCasesInSwitch": true,
+
+    // Report errors for unreachable code
+    "allowUnreachableCode": false,
+
+    // Report errors for unused labels
+    "allowUnusedLabels": false,
+
+    // Check that indexes are used correctly (may cause false positives)
+    "noUncheckedIndexedAccess": false,
+
+    // Report errors when 'this' is used outside of classes
+    "noImplicitThis": true,
+
+    // Report errors for implicitly-any expressions
+    "noImplicitAny": true,
+
+    // Report errors for return statements without values
+    "noImplicitReturns": true,
+
+    // Require explicit return types on functions
+    "noImplicitOverride": true,
+
+    // Check for property declarations that shadow base class members
+    "noPropertyAccessFromIndexSignature": false,
+
+    // ===================================
+    // Interop Constraints
+    // ===================================
+
+    // Emit additional JavaScript for CommonJS interop
+    "esModuleInterop": true,
+
+    // Ensure consistent casing in imports
+    "forceConsistentCasingInFileNames": true,
+
+    // Allow default imports from modules with no default export
+    "allowSyntheticDefaultImports": true,
+
+    // Emit __importStar and __importDefault for better interop
+    "isolatedModules": true,
+
+    // ===================================
+    // Performance and Optimization
+    // ===================================
+
+    // Skip type checking of declaration files
+    "skipLibCheck": true,
+
+    // Use incremental compilation for faster rebuilds
+    "incremental": true,
+
+    // ===================================
+    // Advanced Options
+    // ===================================
+
+    // Preserve const enums instead of inlining
+    "preserveConstEnums": true,
+
+    // Do not truncate error messages
+    "noErrorTruncation": true,
+
+    // Enable experimental decorators (if needed)
+    "experimentalDecorators": false,
+
+    // Enable emit decorator metadata (if needed)
+    "emitDecoratorMetadata": false,
+
+    // ===================================
+    // Completeness
+    // ===================================
+
+    // Ensure all files are included in compilation
+    "skipDefaultLibCheck": false
+  },
+
+  // ===================================
+  // Include and Exclude
+  // ===================================
+
+  "include": ["src/**/*"],
+
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"]
+}
