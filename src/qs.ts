@@ -17,17 +17,8 @@ export const qs = {
    */
   parse(str: string): Record<string, string> {
     const query = str.startsWith('?') ? str.slice(1) : str
-
     if (!query) return {}
-
-    const params = new URLSearchParams(query)
-    const result: Record<string, string> = {}
-
-    params.forEach((value, key) => {
-      result[key] = value
-    })
-
-    return result
+    return Object.fromEntries(new URLSearchParams(query))
   },
 
   /**
@@ -45,15 +36,11 @@ export const qs = {
    * ```
    */
   stringify(obj: Record<string, any>, addPrefix = false): string {
-    const params = new URLSearchParams()
+    const entries = Object.entries(obj)
+      .filter(([_, value]) => value !== undefined && value !== null)
+      .map(([key, value]) => [key, String(value)] as [string, string])
 
-    Object.entries(obj).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        params.append(key, String(value))
-      }
-    })
-
-    const result = params.toString()
+    const result = new URLSearchParams(entries).toString()
     return addPrefix && result ? `?${result}` : result
   },
 }

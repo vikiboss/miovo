@@ -63,6 +63,7 @@
     "prepublishOnly": "pnpm build && pnpm test run && pnpm typecheck"
   },
   "devDependencies": {
+    "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "4.0.10",
     "bumpp": "^10.3.1",
     "prettier": "^3.6.2",

@@ -36,9 +36,7 @@ export function chunk<T>(array: readonly T[], size: number): T[][] {
     return []
   }
 
-  const result: T[][] = []
-  for (let i = 0; i < array.length; i += size) {
-    result.push(array.slice(i, i + size) as T[])
-  }
-  return result
+  return Array.from({ length: Math.ceil(array.length / size) }, (_, i) =>
+    array.slice(i * size, i * size + size),
+  ) as T[][]
 }

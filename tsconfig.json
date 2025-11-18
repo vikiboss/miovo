@@ -8,8 +8,8 @@
     // Use latest ECMAScript features (ES2025+)
     "target": "ESNext",
 
-    // Use latest standard library typings
-    "lib": ["ESNext"],
+    // Use latest standard library typings (ESNext + DOM for universal runtime support)
+    "lib": ["ESNext", "DOM"],
 
     // ===================================
     // Module Resolution

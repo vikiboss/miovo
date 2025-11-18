@@ -8,9 +8,12 @@ importers:
 
   .:
     devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
       '@vitest/coverage-v8':
         specifier: 4.0.10
-        version: 4.0.10(vitest@4.0.10(jiti@2.6.1)(yaml@2.8.1))
+        version: 4.0.10(vitest@4.0.10(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1))
       bumpp:
         specifier: ^10.3.1
         version: 10.3.1(magicast@0.5.1)
@@ -25,7 +28,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.10
-        version: 4.0.10(jiti@2.6.1)(yaml@2.8.1)
+        version: 4.0.10(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1)
 
 packages:
 
@@ -462,6 +465,9 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
+  '@types/node@24.10.1':
+    resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
+
   '@vitest/coverage-v8@4.0.10':
     resolution: {integrity: sha512-g+brmtoKa/sAeIohNJnnWhnHtU6GuqqVOSQ4SxDIPcgZWZyhJs5RmF5LpqXs8Kq64lANP+vnbn5JLzhLj/G56g==}
     peerDependencies:
@@ -863,6 +869,9 @@ packages:
   unconfig-core@7.4.1:
     resolution: {integrity: sha512-Bp/bPZjV2Vl/fofoA2OYLSnw1Z0MOhCX7zHnVCYrazpfZvseBbGhwcNQMxsg185Mqh7VZQqK3C8hFG/Dyng+yA==}
 
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+
   unrun@0.2.10:
     resolution: {integrity: sha512-IcQCpGp3oawzr2ANNmMCh2XNssrDueQvoOfC/ranG4Enq0vVCCLfen+sJTaLYKR22vxZttF2KvvaubgbUadTqA==}
     engines: {node: '>=20.19.0'}
@@ -1237,7 +1246,11 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@vitest/coverage-v8@4.0.10(vitest@4.0.10(jiti@2.6.1)(yaml@2.8.1))':
+  '@types/node@24.10.1':
+    dependencies:
+      undici-types: 7.16.0
+
+  '@vitest/coverage-v8@4.0.10(vitest@4.0.10(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1))':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.0.10
@@ -1250,7 +1263,7 @@ snapshots:
       magicast: 0.5.1
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.10(jiti@2.6.1)(yaml@2.8.1)
+      vitest: 4.0.10(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -1263,13 +1276,13 @@ snapshots:
       chai: 6.2.1
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.10(vite@7.2.2(jiti@2.6.1)(yaml@2.8.1))':
+  '@vitest/mocker@4.0.10(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1))':
     dependencies:
       '@vitest/spy': 4.0.10
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.2.2(jiti@2.6.1)(yaml@2.8.1)
+      vite: 7.2.2(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1)
 
   '@vitest/pretty-format@4.0.10':
     dependencies:
@@ -1674,12 +1687,14 @@ snapshots:
       '@quansync/fs': 0.1.5
       quansync: 0.2.11
 
+  undici-types@7.16.0: {}
+
   unrun@0.2.10:
     dependencies:
       '@oxc-project/runtime': 0.97.0
       rolldown: 1.0.0-beta.50
 
-  vite@7.2.2(jiti@2.6.1)(yaml@2.8.1):
+  vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
@@ -1688,14 +1703,15 @@ snapshots:
       rollup: 4.53.2
       tinyglobby: 0.2.15
     optionalDependencies:
+      '@types/node': 24.10.1
       fsevents: 2.3.3
       jiti: 2.6.1
       yaml: 2.8.1
 
-  vitest@4.0.10(jiti@2.6.1)(yaml@2.8.1):
+  vitest@4.0.10(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1):
     dependencies:
       '@vitest/expect': 4.0.10
-      '@vitest/mocker': 4.0.10(vite@7.2.2(jiti@2.6.1)(yaml@2.8.1))
+      '@vitest/mocker': 4.0.10(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1))
       '@vitest/pretty-format': 4.0.10
       '@vitest/runner': 4.0.10
       '@vitest/snapshot': 4.0.10
@@ -1712,8 +1728,10 @@ snapshots:
       tinyexec: 0.3.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.2.2(jiti@2.6.1)(yaml@2.8.1)
+      vite: 7.2.2(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1)
       why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.10.1
     transitivePeerDependencies:
       - jiti
       - less
