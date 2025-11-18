@@ -59,8 +59,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "release": "bumpp",
-    "prepublishOnly": "pnpm build && pnpm test run && pnpm typecheck"
+    "release": "bumpp"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

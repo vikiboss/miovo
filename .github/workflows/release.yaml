@@ -33,11 +33,24 @@ jobs:
       - name: Build package
         run: pnpm run build
 
-      - name: Run test
-        run: pnpm run test
+      - name: Run type check & test
+        run: pnpm run typecheck && pnpm run test 
+
+      - name: Determine npm tag
+        id: npm-tag
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" =~ -([a-z]+) ]]; then
+            TAG="${BASH_REMATCH[1]}"
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+            echo "Publishing version $VERSION with tag: $TAG"
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "Publishing version $VERSION with tag: latest"
+          fi
 
       - name: Publish package
-        run: pnpm publish --no-git-checks --access public
+        run: pnpm publish --no-git-checks --access public --tag ${{ steps.npm-tag.outputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
